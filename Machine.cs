@@ -1,20 +1,63 @@
+using System.Security.Cryptography;
+
 namespace Coffee;
+using Coffees;
 // Американо; Капучино; Латте; Мокко; Раф
 public class Machine
 {
     private string[] types { get; } = new string[]{"Американо", "Капучино", "Латте", "Мокко", "Раф"};
     private int choosedCoffee = default;
-    
-    public void getOrder()
+    private int sugar = default;
+    private bool hotCoffee = default;
+
+    public Machine()
     {
-        Console.Write("Какой кофе желаете сегодня? Просто нажмите на кнопку! - ");
-        int choosedCoffee = checkNchoice();
-        Console.WriteLine("Ожидайте, через секунду будет готово...");
-        Console.WriteLine("..");
-        Console.WriteLine($"Вот ваш {types[choosedCoffee]}, наслаждайтесь)");
+        BlackCoffee cup;
+        PrintTypes();
+        GetOrder();
+        Console.Write("Сколько кубиков сахара добавить? 5 максимум - ");
+        sugar = CheckNchoice();
+        Console.Write("А кофе горячий? Y/N ");
+        switch (Console.ReadLine())
+        {
+            case "Y":
+                hotCoffee = true;
+                break;
+            case "N":
+                hotCoffee = false;
+                break;
+            default:
+                Console.WriteLine("Значит горячий..");
+                hotCoffee = true;
+                break;
+        }
+        
+        switch (choosedCoffee)
+        {
+            case 1:
+                cup = new Americano(hotCoffee, sugar);
+                break;
+            case 2:
+                cup = new Mocco(hotCoffee, sugar);
+                break;
+            case 3:
+                cup = new Raph(hotCoffee, sugar);
+                break;
+            case 4:
+                cup = new Latte(hotCoffee, sugar);
+                break;
+            case 5:
+                cup = new Capucino(hotCoffee, sugar);
+                break;
+        }
+    }
+    public void GetOrder()
+    {
+        Console.Write("Сделайте заказ(введите число) - ");
+        choosedCoffee = CheckNchoice();
     }
     
-    public void printTypes()
+    public void PrintTypes()
     {
         for (int i = 0; i < types.Length; i++)
         {
@@ -22,7 +65,7 @@ public class Machine
         }
     }
 
-    private int checkNchoice()
+    private int CheckNchoice()
     {
         bool correctFlag = false;
         string input;
@@ -37,11 +80,10 @@ public class Machine
             }
             else
             {
-                Console.Write("Выберите кофе, ПОЖАЛУЙСТА - ");
+                Console.Write("Выберите кнопку, ПОЖАЛУЙСТА - ");
             }
         }
-
-        choice--;
+        
         return choice;
     }
     
